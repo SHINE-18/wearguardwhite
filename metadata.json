@@ -1,0 +1,8 @@
+{
+  "name": "WearGuard - Premium Industrial Wear Parts & Engineering",
+  "description": "High-performance wear parts, custom alloy engineering, and long-life industrial components for Asphalt, Concrete, Mining, and Process Industries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
