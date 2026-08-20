@@ -154,6 +154,61 @@
   animation: shimmer 4s linear infinite;
 }
 
+/* ===== ACCESSIBILITY: Visible Focus Ring System (P0 #1) ===== */
+/* All interactive elements get a visible gold focus ring on keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default outline for mouse clicks but keep for keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip-to-content link (P0 #5) */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--gold-primary);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0 0 0.75rem 0;
+  text-decoration: none;
+}
+
+.skip-to-content:focus {
+  left: 0;
+  outline: 2px solid var(--midnight);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-ticker,
+  .animate-shimmer,
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
 /* Selection Color */
 ::selection {
   background-color: #d4a340;

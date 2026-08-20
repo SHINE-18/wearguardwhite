@@ -121,7 +121,6 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 <span>Applications</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d4a340] shadow-sm shadow-[#d4a340]/50 -mt-2 -mr-1" />
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${applicationsDropdownOpen ? 'rotate-180 text-[#d4a340]' : 'text-slate-500'}`} />
               </Link>
 
@@ -158,7 +157,7 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* Materials (with dot) */}
+            {/* Materials */}
             <Link
               href="/alloys"
               className={`relative px-3.5 py-2 text-sm font-bold tracking-tight transition-all inline-flex items-center gap-1.5 rounded-xl ${
@@ -168,10 +167,9 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <span>Materials</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d4a340] shadow-sm shadow-[#d4a340]/50 -mt-2 -mr-1" />
             </Link>
 
-            {/* Custom Parts (with dot) */}
+            {/* Custom Parts */}
             <Link
               href="/custom-engineering"
               className={`relative px-3.5 py-2 text-sm font-bold tracking-tight transition-all inline-flex items-center gap-1.5 rounded-xl ${
@@ -181,7 +179,6 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <span>Custom Parts</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d4a340] shadow-sm shadow-[#d4a340]/50 -mt-2 -mr-1" />
             </Link>
 
             {/* About Us (Solid Titanium Gold Button) */}

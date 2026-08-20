@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   X, 
   UploadCloud, 
@@ -54,6 +54,8 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteId, setQuoteId] = useState('');
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (initialProduct) {
@@ -68,6 +70,62 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
       setFormData(prev => ({ ...prev, notes: initialNote }));
     }
   }, [initialProduct, initialNote, isOpen]);
+
+  // P0 #2: Keyboard focus trap — trap Tab cycling within modal
+  // P0 #4: Escape key closes modal, restore focus on close
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Store the element that had focus before opening
+    previousFocusRef.current = document.activeElement as HTMLElement;
+
+    // Prevent body scroll while modal is open
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Close on Escape
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Trap Tab within modal
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Auto-focus the first focusable element inside the modal
+    requestAnimationFrame(() => {
+      const firstInput = modalRef.current?.querySelector<HTMLElement>('input, select, textarea, button');
+      firstInput?.focus();
+    });
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+      // Restore focus to the element that triggered the modal
+      previousFocusRef.current?.focus();
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -93,8 +151,18 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-[#0b192c]/75 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#faf8f5] border border-[#dcd5c9] rounded-3xl shadow-2xl overflow-hidden text-[#0b192c] my-8">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 overflow-y-auto bg-[#0b192c]/75 backdrop-blur-sm animate-in fade-in duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quote-modal-title"
+      aria-describedby="quote-modal-description"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        ref={modalRef}
+        className="relative w-full h-full sm:h-auto sm:max-w-2xl bg-[#faf8f5] border-0 sm:border border-[#dcd5c9] sm:rounded-3xl rounded-none shadow-2xl overflow-hidden text-[#0b192c] sm:my-8"
+      >
         
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-[#dcd5c9] bg-[#ede7de] flex items-center justify-between">
@@ -103,16 +171,17 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base sm:text-lg text-[#0b192c]">
+              <h3 id="quote-modal-title" className="font-bold text-base sm:text-lg text-[#0b192c]">
                 Request Engineering Quote & Drawing Review
               </h3>
-              <p className="text-xs text-[#4a433d] font-mono-tech">
-                24-Hour Drawing Turnaround • Small-Batch 1–10 Units Available
+              <p id="quote-modal-description" className="text-xs text-[#4a433d] font-mono-tech">
+                Upload your 2D/3D drawings or describe your wear problem. Our metallurgists will provide a feasibility review and costed alloy recommendation within 24 business hours.
               </p>
             </div>
           </div>
           <button 
             onClick={onClose}
+            aria-label="Close quote modal"
             className="p-1.5 rounded-lg text-slate-500 hover:text-[#0b192c] hover:bg-[#dcd5c9] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />

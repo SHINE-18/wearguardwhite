@@ -73,8 +73,12 @@ export default function RootLayout({
     <html lang="en" className={`${jakarta.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen w-full overflow-x-hidden bg-[#f4f0ea] text-[#0b192c] flex flex-col justify-between selection:bg-[#d4a340] selection:text-white font-sans antialiased">
         <ModalProvider>
+          {/* Skip-to-content link for keyboard navigation (P0 #5) */}
+          <a href="#main-content" className="skip-to-content">
+            Skip to main content
+          </a>
           <Navbar />
-          <main className="flex-1 w-full relative">
+          <main id="main-content" className="flex-1 w-full relative" tabIndex={-1}>
             {children}
           </main>
           <Footer />

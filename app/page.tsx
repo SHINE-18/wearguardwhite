@@ -200,7 +200,7 @@ export default function HomePage() {
                   <img src="/images/rpm-12.png" alt="High Duty Rotation" className="w-6 h-6 object-contain" />
                   <div className="text-left">
                     <div className="text-[#0b192c] font-bold">12–15 RPM Continuous Duty</div>
-                    <div className="text-[10px] text-[#a67c1e] font-semibold">High-Temperature Thermal Balance</div>
+                    <div className="text-[11px] text-[#a67c1e] font-semibold">High-Temperature Thermal Balance</div>
                   </div>
                 </div>
 
@@ -285,13 +285,13 @@ export default function HomePage() {
                     alt={part.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-[#faf8f5]/95 text-[10px] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm backdrop-blur-sm">
+                  <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-[#faf8f5]/95 text-[11px] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm backdrop-blur-sm">
                     {part.hardness}
                   </span>
                 </div>
 
                 <div className="space-y-0.5">
-                  <span className="text-[10px] uppercase font-bold text-[#a67c1e] font-mono-tech">
+                  <span className="text-[11px] uppercase font-bold text-[#a67c1e] font-mono-tech">
                     {part.category}
                   </span>
                   <h3 className="text-base font-bold text-[#0b192c] group-hover:text-[#a67c1e] transition-colors">
@@ -507,7 +507,7 @@ export default function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0b192c]/80 via-transparent to-transparent" />
-                  <span className="absolute bottom-2.5 left-2.5 text-[10px] px-2.5 py-1 rounded bg-[#faf8f5] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm">
+                  <span className="absolute bottom-2.5 left-2.5 text-[11px] px-2.5 py-1 rounded bg-[#faf8f5] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm">
                     {ind.badge}
                   </span>
                 </div>
@@ -620,7 +620,7 @@ export default function HomePage() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         {prod.recommendedAlloys[0] && (
-                          <span className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded bg-[#faf8f5]/95 text-[10px] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm backdrop-blur-sm">
+                          <span className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded bg-[#faf8f5]/95 text-[11px] font-mono-tech font-bold text-[#a67c1e] border border-[#dcd5c9] shadow-sm backdrop-blur-sm">
                             {prod.recommendedAlloys[0]}
                           </span>
                         )}
@@ -713,16 +713,22 @@ export default function HomePage() {
           </h2>
         </div>
 
-        <div className="space-y-3 max-w-5xl mx-auto">
+        <div className="space-y-3 max-w-5xl mx-auto" role="list">
           {FAQ_DATA.map((faq, idx) => {
             const isOpen = openFaqIndex === idx;
+            const faqId = `faq-${idx}`;
+            const answerId = `faq-answer-${idx}`;
             return (
               <div 
                 key={idx} 
                 className="rounded-2xl bg-[#faf8f5] border border-[#dcd5c9] shadow-sm overflow-hidden transition-colors"
+                role="listitem"
               >
                 <button
+                  id={faqId}
                   onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={answerId}
                   className="w-full p-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#ede7de]"
                 >
                   <span className="text-sm sm:text-base font-bold text-[#0b192c]">
@@ -732,13 +738,40 @@ export default function HomePage() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-[#4a433d] leading-relaxed border-t border-[#dcd5c9] pt-3">
+                  <div 
+                    id={answerId}
+                    role="region"
+                    aria-labelledby={faqId}
+                    className="px-5 pb-5 text-xs sm:text-sm text-[#4a433d] leading-relaxed border-t border-[#dcd5c9] pt-3"
+                  >
                     {faq.answer}
                   </div>
                 )}
               </div>
             );
           })}
+        </div>
+
+        {/* P1 #8: Still have questions? CTA */}
+        <div className="text-center max-w-2xl mx-auto pt-4 space-y-3">
+          <p className="text-sm text-[#4a433d]">
+            Can't find what you're looking for? Our metallurgical engineers can help.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => openQuoteModal(null, 'Question from FAQ section')}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d4a340] to-[#b8860b] hover:from-[#c29230] hover:to-[#a67c1e] text-white font-bold text-xs uppercase tracking-wider font-mono-tech shadow-md shadow-[#d4a340]/20 transition-all cursor-pointer flex items-center gap-2"
+            >
+              <Phone className="w-3.5 h-3.5" />
+              <span>Ask a Metallurgist</span>
+            </button>
+            <a
+              href={`mailto:engineering@wearguard.engineering`}
+              className="px-5 py-2.5 rounded-xl bg-[#faf8f5] hover:bg-white text-[#0b192c] font-bold text-xs font-mono-tech transition-colors border border-[#dcd5c9] shadow-sm"
+            >
+              engineering@wearguard.engineering
+            </a>
+          </div>
         </div>
       </section>
 
